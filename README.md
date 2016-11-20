@@ -1,4 +1,4 @@
 #Procedural Dungeon
-Made with Unity 5.4.1f1
+Made with Unity 5.4.3f1
 
-This is the old version of my dungeon procedural generation algorithm.
+The purpose of this project is to procedurally generate an isometric dungeon.
