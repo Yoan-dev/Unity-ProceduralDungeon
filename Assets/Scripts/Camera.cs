@@ -1,38 +1,38 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Camera : MonoBehaviour {
+public class Camera : MonoBehaviour
+{
 
-    // GameManager
-    public GameObject gameManager;
+    private new UnityEngine.Camera camera;
 
-    // Scripts
-    public GameManager gameManagerScript;
-
-    // Camera
-    new UnityEngine.Camera camera;
-    
     void Start()
     {
-        gameManagerScript = gameManager.GetComponent("GameManager") as GameManager;
         camera = GetComponent("Camera") as UnityEngine.Camera;
     }
 
-    #region Actions;
-    
-    public void Zoom ()
+    void Update()
     {
-        camera.orthographicSize -= 10;
-        if (camera.orthographicSize < 45) camera.orthographicSize = 45;
+        if (Input.GetAxis("Mouse ScrollWheel") < 0.0f) Dezoom();
+        if (Input.GetAxis("Mouse ScrollWheel") > 0.0f) Zoom();
+        if (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.UpArrow)) MoveCamera(0, 0.3f);
+        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) MoveCamera(0, -0.3f);
+        if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.LeftArrow)) MoveCamera(-0.3f, 0);
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) MoveCamera(0.3f, 0);
+        if (Input.GetKey(KeyCode.Escape)) Application.Quit();
     }
 
-    public void Dezoom ()
+    public void Zoom()
     {
-        camera.orthographicSize += 10;
-        if (camera.orthographicSize > 300) camera.orthographicSize = 300;
+        if (camera.orthographicSize > 5) camera.orthographicSize--;
     }
 
-    public void MoveCamera (float x, float y)
+    public void Dezoom()
+    {
+        camera.orthographicSize++;
+    }
+
+    public void MoveCamera(float x, float y)
     {
         camera.gameObject.transform.position =
             new Vector3(
@@ -41,13 +41,4 @@ public class Camera : MonoBehaviour {
                 camera.gameObject.transform.position.z
                 );
     }
-
-    public void Focus (GameObject focus)
-    {
-        transform.position = new Vector3(focus.transform.position.x + 1.0f, focus.transform.position.y, -1);
-        camera.orthographicSize = 3.0f;
-    }
-
-    #endregion Actions;
-
 }
