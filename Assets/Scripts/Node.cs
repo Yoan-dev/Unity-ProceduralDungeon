@@ -107,6 +107,8 @@ public class Node {
 
     #endregion Accessors;
 
+    #region Neighbooring;
+
     public void SetNeighboor (Node neighboor)
     {
         if (y < neighboor.Y)
@@ -140,4 +142,27 @@ public class Node {
     {
         return !(north == null && south == null && east == null && west == null);
     }
+
+    #endregion Neighbooring;
+
+    #region Tiles;
+
+    public Tile[,] Generate (Tile[,]  tiles)
+    {
+        for (int i = x * Resources.NodeSize + Resources.NodeGap; i < x * Resources.NodeSize + Resources.NodeSize - Resources.NodeGap; i++)
+        {
+            for (int j = y * Resources.NodeSize + Resources.NodeGap; j < y * Resources.NodeSize + Resources.NodeSize - Resources.NodeGap; j++)
+            {
+                if (i == x * Resources.NodeSize + Resources.NodeGap ||
+                    i == x * Resources.NodeSize + Resources.NodeSize - Resources.NodeGap - 1 ||
+                    j == y * Resources.NodeSize + Resources.NodeGap ||
+                    j == y * Resources.NodeSize + Resources.NodeSize - Resources.NodeGap - 1)
+                    tiles[i, j] = new Tile(Resources.Tiles.Wall);
+                else tiles[i, j] = new Tile(Resources.Tiles.Floor);
+            }
+        }
+        return tiles;
+    }
+
+    #endregion Tiles;
 }

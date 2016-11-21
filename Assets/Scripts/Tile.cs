@@ -5,6 +5,7 @@ public class Tile {
 
     private int x;
     private int y;
+    private Resources.Tiles type;
 
     #region Accessors;
 
@@ -34,5 +35,23 @@ public class Tile {
         }
     }
 
+    public Resources.Tiles Type
+    {
+        get
+        {
+            return type;
+        }
+
+        set
+        {
+            type = value;
+        }
+    }
+
     #endregion Accessors;
+
+    public Tile (Resources.Tiles type)
+    {
+        this.type = type;
+    }
 }

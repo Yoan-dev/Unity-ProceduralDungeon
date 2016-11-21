@@ -7,6 +7,9 @@ public class Resources {
     // North, South, East, West
     public enum Direction { North, South, East, West };
 
+    // Tiles
+    public enum Tiles { Floor, Wall };
+
     // Random
     private static bool useSeed = false;
     private static string seed;
@@ -238,6 +241,32 @@ public class Resources {
         set
         {
             maxAdditionalPath = value;
+        }
+    }
+
+    public static int NodeSize
+    {
+        get
+        {
+            return nodeSize;
+        }
+
+        set
+        {
+            nodeSize = value;
+        }
+    }
+
+    public static int NodeGap
+    {
+        get
+        {
+            return nodeGap;
+        }
+
+        set
+        {
+            nodeGap = value;
         }
     }
 

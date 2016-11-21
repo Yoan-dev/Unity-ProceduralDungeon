@@ -18,6 +18,7 @@ public class GenerationManager : MonoBehaviour {
             while (NextStep()) { }
             GenerateMainPath();
             GenerateAddtitionalPaths();
+            map.GenerateTiles();
         }
 	}
 
@@ -155,6 +156,7 @@ public class GenerationManager : MonoBehaviour {
     
     private void OnDrawGizmos()
     {
+        /*
         if (map != null)
         {
             Node[,] matrice = map.MatriceClone();
@@ -183,6 +185,24 @@ public class GenerationManager : MonoBehaviour {
                     }
                 }
             }
-        } 
+        }
+        */
+        if (map != null)
+        {
+            Tile[,] matrice = map.TilesClone();
+            if (matrice != null)
+            {
+                for (int i = 0; i < matrice.GetLength(0); i++)
+                {
+                    for (int j = 0; j < matrice.GetLength(1); j++)
+                    {
+                        if (matrice[i, j] == null) Gizmos.color = Color.white;
+                        else if (matrice[i, j].Type == Resources.Tiles.Wall) Gizmos.color = Color.red;
+                        else Gizmos.color = Color.blue;
+                        Gizmos.DrawCube(new Vector2(i, j), Vector2.one);
+                    }
+                }
+            }
+        }
     }
 }

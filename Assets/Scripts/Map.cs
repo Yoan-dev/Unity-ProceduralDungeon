@@ -7,6 +7,8 @@ public class Map {
     private Node[,] matrice;
     private IList<Node> nodes = new List<Node>();
 
+    private Tile[,] tiles;
+
     #region Initialization;
 
     public void Initialize ()
@@ -32,7 +34,7 @@ public class Map {
 
     #endregion Initialization;
 
-    #region Generation;
+    #region Nodes;
 
     public void GenerateNode (int x, int y, bool first)
     {
@@ -88,5 +90,21 @@ public class Map {
         else return null;
     }
 
-    #endregion Generation;
+    #endregion Nodes;
+
+    #region Tiles;
+
+    public void GenerateTiles ()
+    {
+        tiles = new Tile[matrice.GetLength(0) * Resources.NodeSize, matrice.GetLength(1) * Resources.NodeSize];
+        foreach (Node node in nodes)
+            tiles = node.Generate(tiles);
+    }
+
+    public Tile[,] TilesClone()
+    {
+        return tiles.Clone() as Tile[,];
+    }
+
+    #endregion Tiles;
 }
