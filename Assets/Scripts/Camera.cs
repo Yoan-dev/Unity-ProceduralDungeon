@@ -15,21 +15,21 @@ public class Camera : MonoBehaviour
     {
         if (Input.GetAxis("Mouse ScrollWheel") < 0.0f) Dezoom();
         if (Input.GetAxis("Mouse ScrollWheel") > 0.0f) Zoom();
-        if (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.UpArrow)) MoveCamera(0, 0.3f);
-        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) MoveCamera(0, -0.3f);
-        if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.LeftArrow)) MoveCamera(-0.3f, 0);
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) MoveCamera(0.3f, 0);
+        if (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.UpArrow)) MoveCamera(0, 0.6f);
+        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) MoveCamera(0, -0.6f);
+        if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.LeftArrow)) MoveCamera(-0.6f, 0);
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) MoveCamera(0.6f, 0);
         if (Input.GetKey(KeyCode.Escape)) Application.Quit();
     }
 
     public void Zoom()
     {
-        if (camera.orthographicSize > 5) camera.orthographicSize--;
+        if (camera.orthographicSize > 6) camera.orthographicSize-=2;
     }
 
     public void Dezoom()
     {
-        camera.orthographicSize++;
+        camera.orthographicSize+=2;
     }
 
     public void MoveCamera(float x, float y)

@@ -8,7 +8,11 @@ public class Resources {
     public enum Direction { North, South, East, West };
 
     // Tiles
-    public enum Tiles { Floor, Wall };
+    public enum Tiles { Floor, WallTop, WallBottom };
+
+    // Isometric
+    private static float widthUnit = 1.275f;
+    private static float heightUnit = 0.64f;
 
     // Random
     private static bool useSeed = false;
@@ -30,14 +34,15 @@ public class Resources {
     // Nodes size
     private static int nodeSize = 20;
     private static int nodeGap = 3;
+    private static int corridorWidth = 2;
 
     // Nodes count
     private static int minNodes = 15;
     private static int maxNodes = 20;
 
     // Additional path count
-    private static int minAdditionalPath = 3;
-    private static int maxAdditionalPath = 5;
+    private static int minAdditionalPath = 2;
+    private static int maxAdditionalPath = 3;
 
     // Generation metrics
     private static int northFactor = 40;
@@ -267,6 +272,45 @@ public class Resources {
         set
         {
             nodeGap = value;
+        }
+    }
+
+    public static int CorridorWidth
+    {
+        get
+        {
+            return corridorWidth;
+        }
+
+        set
+        {
+            corridorWidth = value;
+        }
+    }
+
+    public static float WidthUnit
+    {
+        get
+        {
+            return widthUnit;
+        }
+
+        set
+        {
+            widthUnit = value;
+        }
+    }
+
+    public static float HeightUnit
+    {
+        get
+        {
+            return heightUnit;
+        }
+
+        set
+        {
+            heightUnit = value;
         }
     }
 

@@ -42,6 +42,7 @@ public class Map {
         node.X = x;
         node.Y = y;
         node.First = first;
+        node.Id = "node" + nodes.Count;
         matrice[x, y] = node;
         nodes.Add(node);
     }
@@ -94,11 +95,12 @@ public class Map {
 
     #region Tiles;
 
-    public void GenerateTiles ()
+    public Tile[,] GenerateTiles ()
     {
         tiles = new Tile[matrice.GetLength(0) * Resources.NodeSize, matrice.GetLength(1) * Resources.NodeSize];
         foreach (Node node in nodes)
             tiles = node.Generate(tiles);
+        return tiles;
     }
 
     public Tile[,] TilesClone()

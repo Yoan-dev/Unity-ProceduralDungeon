@@ -3,24 +3,35 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class GenerationManager : MonoBehaviour {
-    
+
+    public GameObject floor;
+    public GameObject wallTop;
+    public GameObject wallBottom;
+    public GameObject node;
+
     private Map map;
     private int currentX;
     private int currentY;
     private int nodesLimit;
     private int ramificationChance;
+
+    private bool toClean;
 	
 	void Update ()
     {
         if (Input.GetMouseButtonUp(0))
         {
+            if (toClean) return;
+            toClean = true;
             Initialize();
             while (NextStep()) { }
             GenerateMainPath();
             GenerateAddtitionalPaths();
-            map.GenerateTiles();
+            GenerateTiles();
         }
-	}
+        if (Input.GetMouseButtonUp(1))
+            Clean();
+    }
 
     #region Generation;
 
@@ -32,6 +43,13 @@ public class GenerationManager : MonoBehaviour {
         currentX = map.GetStartingX();
         currentY = map.GetStartingY();
         nodesLimit = Resources.Rand.Next(Resources.MinNodes, Resources.MaxNodes);
+    }
+
+    private void Clean ()
+    {
+        toClean = false;
+        for (int i = 0; i < transform.childCount; i++)
+            Destroy(transform.GetChild(i).gameObject);
     }
 
     private bool NextStep ()
@@ -152,10 +170,45 @@ public class GenerationManager : MonoBehaviour {
 
     #endregion Pathing;
 
+    #region Tiles;
+
+    private void GenerateTiles()
+    {
+        Tile[,] tiles = map.GenerateTiles();
+        for (int i = 0; i < tiles.GetLength(0); i++)
+        {
+            for (int j = 0; j < tiles.GetLength(1); j++)
+            {
+                if (tiles[i, j] != null)
+                {
+                    GameObject toInstantiate = null;
+                    switch (tiles[i, j].Type)
+                    {
+                        case Resources.Tiles.Floor: toInstantiate = floor; break;
+                        case Resources.Tiles.WallTop: toInstantiate = wallTop; break;
+                        case Resources.Tiles.WallBottom: toInstantiate = wallBottom; break;
+                    }
+                    GameObject instance = Instantiate(toInstantiate, new Vector3((j - i) * Resources.WidthUnit, (i + j) * Resources.HeightUnit), Quaternion.identity) as GameObject;
+                    if (transform.FindChild(tiles[i, j].Parent.Id) == null)
+                    {
+                        GameObject container = Instantiate(node, transform) as GameObject;
+                        container.name = tiles[i, j].Parent.Id;
+                    }
+                    instance.transform.SetParent(transform.FindChild(tiles[i, j].Parent.Id));
+                }
+            }
+        }
+    }
+
+    #endregion Tiles;
+
     #endregion Generation;
-    
+
+    #region Gizmos;
+
     private void OnDrawGizmos()
     {
+        // Draw nodes
         /*
         if (map != null)
         {
@@ -187,6 +240,9 @@ public class GenerationManager : MonoBehaviour {
             }
         }
         */
+
+        // Draw tiles
+        /*/
         if (map != null)
         {
             Tile[,] matrice = map.TilesClone();
@@ -197,12 +253,16 @@ public class GenerationManager : MonoBehaviour {
                     for (int j = 0; j < matrice.GetLength(1); j++)
                     {
                         if (matrice[i, j] == null) Gizmos.color = Color.white;
-                        else if (matrice[i, j].Type == Resources.Tiles.Wall) Gizmos.color = Color.red;
+                        else if (matrice[i, j].Type == Resources.Tiles.WallTop) Gizmos.color = Color.red;
+                        else if (matrice[i, j].Type == Resources.Tiles.WallBottom) Gizmos.color = Color.yellow;
                         else Gizmos.color = Color.blue;
                         Gizmos.DrawCube(new Vector2(i, j), Vector2.one);
                     }
                 }
             }
         }
+        /*/
     }
+
+    #endregion Gizmos;
 }

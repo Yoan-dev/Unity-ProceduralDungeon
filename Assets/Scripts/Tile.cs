@@ -2,39 +2,12 @@
 using System.Collections;
 
 public class Tile {
-
-    private int x;
-    private int y;
+    
     private Resources.Tiles type;
+    private Node parent;
 
     #region Accessors;
-
-    public int X
-    {
-        get
-        {
-            return x;
-        }
-
-        set
-        {
-            x = value;
-        }
-    }
-
-    public int Y
-    {
-        get
-        {
-            return y;
-        }
-
-        set
-        {
-            y = value;
-        }
-    }
-
+    
     public Resources.Tiles Type
     {
         get
@@ -48,10 +21,24 @@ public class Tile {
         }
     }
 
+    public Node Parent
+    {
+        get
+        {
+            return parent;
+        }
+
+        set
+        {
+            parent = value;
+        }
+    }
+
     #endregion Accessors;
 
-    public Tile (Resources.Tiles type)
+    public Tile (Resources.Tiles type, Node parent)
     {
         this.type = type;
+        this.parent = parent;
     }
 }

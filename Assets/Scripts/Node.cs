@@ -7,6 +7,8 @@ public class Node {
     private int y;
     private bool first;
 
+    private string id;
+
     private Node north;
     private Node south;
     private Node east;
@@ -105,6 +107,19 @@ public class Node {
         }
     }
 
+    public string Id
+    {
+        get
+        {
+            return id;
+        }
+
+        set
+        {
+            id = value;
+        }
+    }
+
     #endregion Accessors;
 
     #region Neighbooring;
@@ -147,22 +162,100 @@ public class Node {
 
     #region Tiles;
 
+    // super raw stuff
     public Tile[,] Generate (Tile[,]  tiles)
     {
         for (int i = x * Resources.NodeSize + Resources.NodeGap; i < x * Resources.NodeSize + Resources.NodeSize - Resources.NodeGap; i++)
         {
             for (int j = y * Resources.NodeSize + Resources.NodeGap; j < y * Resources.NodeSize + Resources.NodeSize - Resources.NodeGap; j++)
             {
-                if (i == x * Resources.NodeSize + Resources.NodeGap ||
-                    i == x * Resources.NodeSize + Resources.NodeSize - Resources.NodeGap - 1 ||
-                    j == y * Resources.NodeSize + Resources.NodeGap ||
+                if (
+                    i == x * Resources.NodeSize + Resources.NodeGap ||
+                    j == y * Resources.NodeSize + Resources.NodeGap)
+                    tiles[i, j] = new Tile(Resources.Tiles.WallBottom, this);
+                else if (
+                    i == x * Resources.NodeSize + Resources.NodeSize - Resources.NodeGap - 1 || 
                     j == y * Resources.NodeSize + Resources.NodeSize - Resources.NodeGap - 1)
-                    tiles[i, j] = new Tile(Resources.Tiles.Wall);
-                else tiles[i, j] = new Tile(Resources.Tiles.Floor);
+                    tiles[i, j] = new Tile(Resources.Tiles.WallTop, this);
+                else tiles[i, j] = new Tile(Resources.Tiles.Floor, this);
+            }
+        }
+        if (North != null) tiles = WallNorth(tiles);
+        if (South != null) tiles = WallSouth(tiles);
+        if (East != null) tiles = WallEast(tiles);
+        if (West != null) tiles = WallWest(tiles);
+
+        return tiles;
+    }
+
+    private Tile[,] WallNorth(Tile[,] tiles)
+    {
+        for (int i = (y + 1) * Resources.NodeSize - Resources.NodeGap - 1; i < (y + 1) * Resources.NodeSize; i++)
+        {
+            for (int j = x * Resources.NodeSize + Resources.NodeSize / 2 - Resources.CorridorWidth; j < x * Resources.NodeSize + 2 + Resources.NodeSize / 2; j++)
+            {
+                if (j == x * Resources.NodeSize + 2 + Resources.NodeSize / 2 - 1 ||
+                    i == (y + 1) * Resources.NodeSize - Resources.NodeGap - 1 &&
+                    j == x * Resources.NodeSize + Resources.NodeSize / 2 - Resources.CorridorWidth)
+                    tiles[j, i] = new Tile(Resources.Tiles.WallTop, this);
+                else if (j == x * Resources.NodeSize + Resources.NodeSize / 2 - Resources.CorridorWidth)
+                    tiles[j, i] = new Tile(Resources.Tiles.WallBottom, this);
+                else tiles[j, i] = new Tile(Resources.Tiles.Floor, this);
             }
         }
         return tiles;
     }
+
+    private Tile[,] WallSouth(Tile[,] tiles)
+    {
+        for (int i = y * Resources.NodeSize; i < y * Resources.NodeSize + Resources.NodeGap + 1; i++)
+        {
+            for (int j = x * Resources.NodeSize + Resources.NodeSize / 2 - Resources.CorridorWidth; j < x * Resources.NodeSize + 2 + Resources.NodeSize / 2; j++)
+            {
+                if (j == x * Resources.NodeSize + Resources.NodeSize / 2 - Resources.CorridorWidth)
+                    tiles[j, i] = new Tile(Resources.Tiles.WallBottom, this);
+                else if (j == x * Resources.NodeSize + 2 + Resources.NodeSize / 2 - 1)
+                    tiles[j, i] = new Tile(Resources.Tiles.WallTop, this);
+                else tiles[j, i] = new Tile(Resources.Tiles.Floor, this);
+            }
+        }
+        return tiles;
+    }
+
+    private Tile[,] WallEast(Tile[,] tiles)
+    {
+        for (int i = (x + 1) * Resources.NodeSize - Resources.NodeGap - 1; i < (x + 1) * Resources.NodeSize; i++)
+        {
+            for (int j = y * Resources.NodeSize + Resources.NodeSize / 2 - Resources.CorridorWidth; j < y * Resources.NodeSize + 2 + Resources.NodeSize / 2; j++)
+            {
+                if (j == y * Resources.NodeSize + 2 + Resources.NodeSize / 2 - 1 ||
+                    i == (x + 1) * Resources.NodeSize - Resources.NodeGap - 1 &&
+                    j == y * Resources.NodeSize + Resources.NodeSize / 2 - Resources.CorridorWidth)
+                    tiles[i, j] = new Tile(Resources.Tiles.WallTop, this);
+                else if (j == y * Resources.NodeSize + Resources.NodeSize / 2 - Resources.CorridorWidth)
+                    tiles[i, j] = new Tile(Resources.Tiles.WallBottom, this);
+                else tiles[i, j] = new Tile(Resources.Tiles.Floor, this);
+            }
+        }
+        return tiles;
+    }
+
+    private Tile[,] WallWest(Tile[,] tiles)
+    {
+        for (int i = x * Resources.NodeSize; i < x * Resources.NodeSize + Resources.NodeGap + 1; i++)
+        {
+            for (int j = y * Resources.NodeSize + Resources.NodeSize / 2 - Resources.CorridorWidth; j < y * Resources.NodeSize + 2 + Resources.NodeSize / 2; j++)
+            {
+                if (j == y * Resources.NodeSize + Resources.NodeSize / 2 - Resources.CorridorWidth)
+                    tiles[i, j] = new Tile(Resources.Tiles.WallBottom, this);
+                else if (j == y * Resources.NodeSize + 2 + Resources.NodeSize / 2 - 1)
+                    tiles[i, j] = new Tile(Resources.Tiles.WallTop, this);
+                else tiles[i, j] = new Tile(Resources.Tiles.Floor, this);
+            }
+        }
+        return tiles;
+    }
+    //
 
     #endregion Tiles;
 }
