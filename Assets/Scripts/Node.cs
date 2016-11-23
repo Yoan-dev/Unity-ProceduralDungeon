@@ -3,12 +3,17 @@ using System.Collections;
 
 public class Node {
 
+    // Coordinates
     private int x;
     private int y;
+
+    // Is is the first dungeon node
     private bool first;
 
+    // GameObject name
     private string id;
 
+    // Neighboors
     private Node north;
     private Node south;
     private Node east;

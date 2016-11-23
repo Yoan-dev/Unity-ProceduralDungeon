@@ -3,31 +3,30 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class GenerationManager : MonoBehaviour {
-
+    
+    // Unity editor (temporary)
     public GameObject floor;
     public GameObject wallTop;
     public GameObject wallBottom;
     public GameObject node;
 
+    // Generation attributes
     private Map map;
     private int currentX;
     private int currentY;
     private int nodesLimit;
     private int ramificationChance;
-
-    private bool toClean;
+    
+    private bool generated;
 	
 	void Update ()
     {
         if (Input.GetMouseButtonUp(0))
         {
-            if (toClean) return;
-            toClean = true;
+            if (generated) return;
+            generated = true;
             Initialize();
             while (NextStep()) { }
-            GenerateMainPath();
-            GenerateAddtitionalPaths();
-            GenerateTiles();
         }
         if (Input.GetMouseButtonUp(1))
             Clean();
@@ -37,25 +36,36 @@ public class GenerationManager : MonoBehaviour {
 
     private void Initialize ()
     {
+        // Initializations
         Resources.Initialize();
         map = new Map();
         map.Initialize();
+
+        // Starting room position regarding dungeon bounds
         currentX = map.GetStartingX();
         currentY = map.GetStartingY();
+
+        // Random nodes number
         nodesLimit = Resources.Rand.Next(Resources.MinNodes, Resources.MaxNodes);
     }
 
     private void Clean ()
     {
-        toClean = false;
+        generated = false;
         for (int i = 0; i < transform.childCount; i++)
             Destroy(transform.GetChild(i).gameObject);
     }
 
+    // Next generation step
     private bool NextStep ()
     {
-        if (map.NodesCount() >= nodesLimit) return false;
+        // if NextNode generation is a failure
+        // we chose another origin
         if (!NextNode()) ramificationChance = 100;
+
+        // otherwise we have only a chance
+        // to change ramificate
+        // (tree shape instand of giant corridor)
         if (Resources.Rand.Next(1, 101) < ramificationChance)
         {
             ramificationChance = Resources.RamificationChance;
@@ -64,6 +74,15 @@ public class GenerationManager : MonoBehaviour {
             currentY = temp.Y;
         }
         else ramificationChance += Resources.RamificationChanceInc;
+
+        // if the nodes generation is over
+        if (map.NodesCount() >= nodesLimit)
+        {
+            GenerateMainPath();
+            GenerateAddtitionalPaths();
+            GenerateTiles();
+            return false;
+        }
         return true;
     }
 
@@ -71,9 +90,11 @@ public class GenerationManager : MonoBehaviour {
 
     private bool NextNode ()
     {
+        // first node generation
         if (map.NodesCount() == 0) map.GenerateNode(currentX, currentY, true);
         else
         {
+            // we pick a random direction
             Resources.Direction dir = Resources.RandomDirection();
             int addX = 0, addY = 0;
             switch (dir)
@@ -83,6 +104,8 @@ public class GenerationManager : MonoBehaviour {
                 case Resources.Direction.East: addX++; break;
                 case Resources.Direction.West: addX--; break;
             }
+            // than we try to find a elligble location
+            // for the node, if possible
             if (!FindElligible(addX, addY)) return false;
             else map.GenerateNode(currentX, currentY, false);
         }
@@ -91,10 +114,12 @@ public class GenerationManager : MonoBehaviour {
 
     private bool FindElligible (int addX, int addY)
     {
+        // incremently search for a possible location
         while (!map.IsElligible(currentX, currentY))
         {
             currentX += addX;
             currentY += addY;
+            // if this is impossible, return false
             if (map.IsForbidden(currentX, currentY)) return false;
         }
         return true;
@@ -104,13 +129,14 @@ public class GenerationManager : MonoBehaviour {
 
     #region Pathing;
 
+    // Linking of all nodes using a stack
     private void GenerateMainPath ()
     {
         Stack<Node> stack = new Stack<Node>();
-        IList<Node> done = new List<Node>();
+        IList<Node> visited = new List<Node>();
         stack.Push(map.FirstNode());
-        done.Add(map.FirstNode());
-        while (done.Count != map.NodesCount())
+        visited.Add(map.FirstNode());
+        while (visited.Count != map.NodesCount())
         {
             Node next = NextMainPath(stack.Peek());
             if (next == null) stack.Pop();
@@ -118,11 +144,12 @@ public class GenerationManager : MonoBehaviour {
             {
                 stack.Peek().SetNeighboor(next);
                 stack.Push(next);
-                done.Add(next);
+                visited.Add(next);
             }
         }
     }
 
+    // Select a random neighboorless adjacent node
     private Node NextMainPath (Node node)
     {
         ArrayList choicePool = new ArrayList();
@@ -137,6 +164,7 @@ public class GenerationManager : MonoBehaviour {
         else return choicePool[Resources.Rand.Next(0, choicePool.Count)] as Node;
     }
 
+    // Set random adjacent nodes as neighboors
     private void GenerateAddtitionalPaths ()
     {
         int additionalPathLimit = Resources.Rand.Next(Resources.MinAdditionalPath, Resources.MaxAdditionalPath + 1);
@@ -153,6 +181,7 @@ public class GenerationManager : MonoBehaviour {
         }
     }
 
+    // Try to set a neighboor to a node
     private bool AddPath (Node node)
     {
         ArrayList choicePool = new ArrayList();
@@ -172,6 +201,8 @@ public class GenerationManager : MonoBehaviour {
 
     #region Tiles;
 
+    // Isometric tiles generation
+    // super raw stuff, about to change
     private void GenerateTiles()
     {
         Tile[,] tiles = map.GenerateTiles();
@@ -199,6 +230,7 @@ public class GenerationManager : MonoBehaviour {
             }
         }
     }
+    //
 
     #endregion Tiles;
 
@@ -208,8 +240,7 @@ public class GenerationManager : MonoBehaviour {
 
     private void OnDrawGizmos()
     {
-        // Draw nodes
-        /*
+        /*/ Draw nodes
         if (map != null)
         {
             Node[,] matrice = map.MatriceClone();
@@ -239,10 +270,9 @@ public class GenerationManager : MonoBehaviour {
                 }
             }
         }
-        */
-
-        // Draw tiles
         /*/
+
+        /*/ Draw tiles
         if (map != null)
         {
             Tile[,] matrice = map.TilesClone();

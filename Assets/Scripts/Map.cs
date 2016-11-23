@@ -16,6 +16,10 @@ public class Map {
         matrice = new Node[
             Resources.Rand.Next(Resources.MinWidth, Resources.MaxWidth + 1),
             Resources.Rand.Next(Resources.MinHeight, Resources.MaxHeight + 1)];
+
+        tiles = new Tile[
+            matrice.GetLength(0) * Resources.NodeSize, 
+            matrice.GetLength(1) * Resources.NodeSize];
     }
 
     public int GetStartingX()
@@ -97,7 +101,6 @@ public class Map {
 
     public Tile[,] GenerateTiles ()
     {
-        tiles = new Tile[matrice.GetLength(0) * Resources.NodeSize, matrice.GetLength(1) * Resources.NodeSize];
         foreach (Node node in nodes)
             tiles = node.Generate(tiles);
         return tiles;

@@ -322,6 +322,7 @@ public class Resources {
         else rand = new System.Random(Time.time.GetHashCode());
     }
 
+    // North, South, East, West
     public static Direction RandomDirection ()
     {
         int totalFactor = northFactor + southFactor + eastFactor + westFactor;
