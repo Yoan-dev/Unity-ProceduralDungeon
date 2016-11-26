@@ -4,7 +4,7 @@ using System.Collections;
 public class Tile {
     
     private Resources.Tiles type;
-    private Node parent;
+    private string idParent;
 
     #region Accessors;
     
@@ -21,24 +21,24 @@ public class Tile {
         }
     }
 
-    public Node Parent
+    public string IdParent
     {
         get
         {
-            return parent;
+            return idParent;
         }
 
         set
         {
-            parent = value;
+            idParent = value;
         }
     }
 
     #endregion Accessors;
 
-    public Tile (Resources.Tiles type, Node parent)
+    public Tile (Resources.Tiles type, string idParent)
     {
         this.type = type;
-        this.parent = parent;
+        this.idParent = idParent;
     }
 }

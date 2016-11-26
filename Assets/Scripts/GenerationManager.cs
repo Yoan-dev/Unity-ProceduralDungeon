@@ -220,12 +220,12 @@ public class GenerationManager : MonoBehaviour {
                         case Resources.Tiles.WallBottom: toInstantiate = wallBottom; break;
                     }
                     GameObject instance = Instantiate(toInstantiate, new Vector3((j - i) * Resources.WidthUnit, (i + j) * Resources.HeightUnit), Quaternion.identity) as GameObject;
-                    if (transform.FindChild(tiles[i, j].Parent.Id) == null)
+                    if (transform.FindChild(tiles[i, j].IdParent) == null)
                     {
                         GameObject container = Instantiate(node, transform) as GameObject;
-                        container.name = tiles[i, j].Parent.Id;
+                        container.name = tiles[i, j].IdParent;
                     }
-                    instance.transform.SetParent(transform.FindChild(tiles[i, j].Parent.Id));
+                    instance.transform.SetParent(transform.FindChild(tiles[i, j].IdParent));
                 }
             }
         }
@@ -272,7 +272,7 @@ public class GenerationManager : MonoBehaviour {
         }
         /*/
 
-        /*/ Draw tiles
+        // Draw tiles
         if (map != null)
         {
             Tile[,] matrice = map.TilesClone();
@@ -291,7 +291,7 @@ public class GenerationManager : MonoBehaviour {
                 }
             }
         }
-        /*/
+        //
     }
 
     #endregion Gizmos;

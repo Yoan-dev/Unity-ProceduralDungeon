@@ -42,11 +42,7 @@ public class Map {
 
     public void GenerateNode (int x, int y, bool first)
     {
-        Node node = new Node();
-        node.X = x;
-        node.Y = y;
-        node.First = first;
-        node.Id = "node" + nodes.Count;
+        Node node = new Node(first, "node" + nodes.Count, x, y);
         matrice[x, y] = node;
         nodes.Add(node);
     }

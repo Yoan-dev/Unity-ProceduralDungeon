@@ -27,9 +27,9 @@ public class Resources {
 
     // Map limits
     private static bool northAccess = true;
-    private static bool southAccess = false;
+    private static bool southAccess = true;
     private static bool eastAccess = true;
-    private static bool westAccess = true;
+    private static bool westAccess = false;
 
     // Nodes size
     private static int nodeSize = 20;
