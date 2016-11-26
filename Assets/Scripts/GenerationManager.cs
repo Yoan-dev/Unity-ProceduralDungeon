@@ -3,12 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class GenerationManager : MonoBehaviour {
-    
-    // Unity editor (temporary)
-    public GameObject floor;
-    public GameObject wallTop;
-    public GameObject wallBottom;
+
+
+    // GameObjects
     public GameObject node;
+    public GameObject[] elements;
 
     // Generation attributes
     private Map map;
@@ -37,7 +36,7 @@ public class GenerationManager : MonoBehaviour {
     private void Initialize ()
     {
         // Initializations
-        Resources.Initialize();
+        Resources.Initialize(elements);
         map = new Map();
         map.Initialize();
 
@@ -51,6 +50,7 @@ public class GenerationManager : MonoBehaviour {
 
     private void Clean ()
     {
+        Resources.Clean();
         generated = false;
         for (int i = 0; i < transform.childCount; i++)
             Destroy(transform.GetChild(i).gameObject);
@@ -212,14 +212,7 @@ public class GenerationManager : MonoBehaviour {
             {
                 if (tiles[i, j] != null)
                 {
-                    GameObject toInstantiate = null;
-                    switch (tiles[i, j].Type)
-                    {
-                        case Resources.Tiles.Floor: toInstantiate = floor; break;
-                        case Resources.Tiles.WallTop: toInstantiate = wallTop; break;
-                        case Resources.Tiles.WallBottom: toInstantiate = wallBottom; break;
-                    }
-                    GameObject instance = Instantiate(toInstantiate, new Vector3((j - i) * Resources.WidthUnit, (i + j) * Resources.HeightUnit), Quaternion.identity) as GameObject;
+                    GameObject instance = Instantiate(Resources.GetElement(tiles[i, j].Type), new Vector3((j - i) * Resources.WidthUnit, (i + j) * Resources.HeightUnit), Quaternion.identity) as GameObject;
                     if (transform.FindChild(tiles[i, j].IdParent) == null)
                     {
                         GameObject container = Instantiate(node, transform) as GameObject;
@@ -272,7 +265,7 @@ public class GenerationManager : MonoBehaviour {
         }
         /*/
 
-        // Draw tiles
+        /*/ Draw tiles
         if (map != null)
         {
             Tile[,] matrice = map.TilesClone();
@@ -291,7 +284,7 @@ public class GenerationManager : MonoBehaviour {
                 }
             }
         }
-        //
+        /*/
     }
 
     #endregion Gizmos;

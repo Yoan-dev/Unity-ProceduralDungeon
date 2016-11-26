@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public class Resources {
 
@@ -8,7 +9,12 @@ public class Resources {
     public enum Direction { North, South, East, West };
 
     // Tiles
-    public enum Tiles { Floor, WallTop, WallBottom };
+    public enum Tiles {
+        Floor,
+        WallTop,
+        WallBottom
+    };
+    private static IDictionary<string, GameObject> elements = new Dictionary<string, GameObject>();
 
     // Isometric
     private static float widthUnit = 1.275f;
@@ -316,10 +322,12 @@ public class Resources {
 
     #endregion Accessors;
 
-    public static void Initialize ()
+    public static void Initialize (GameObject[] elements)
     {
         if (useSeed) rand = new System.Random(seed.GetHashCode());
         else rand = new System.Random(Time.time.GetHashCode());
+        foreach (GameObject element in elements)
+            Resources.elements.Add(element.name, element);
     }
 
     // North, South, East, West
@@ -331,5 +339,17 @@ public class Resources {
         if (choice <= northFactor + southFactor) return Direction.South;
         if (choice <= northFactor + southFactor + eastFactor) return Direction.East;
         else return Direction.West;
+    }
+
+    // Get an element
+    public static GameObject GetElement (Tiles tile)
+    {
+        return elements[tile.ToString()];
+    }
+
+    // Clean
+    public static void Clean ()
+    {
+        elements.Clear();
     }
 }
